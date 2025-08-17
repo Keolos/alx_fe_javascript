@@ -36,15 +36,23 @@
   <!-- Quote display section -->
   <div id="quoteDisplay"></div>
   <button id="newQuote">Show New Quote</button>
+  <!-- Category filter -->
+    <div class="margin-top-20">
+  <label for="categoryFilter"><strong>Filter by Category:</strong></label>
+  <select id="categoryFilter">
+    <option value="all">All Categories</option>
+    <!-- Categories will be dynamically added here -->
+  </select>
+    </div>
 
   <!-- Form to add new quotes -->
   <div class="margin-top-20">
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
   <div class="margin-top-20">
   <button id="exportQuotes">Export Quotes</button>
-</div>
+    </div>
 
-<div class="margin-top-20">
+    <div class="margin-top-20">
   <label for="importFile">Import Quotes (JSON):</label>
   <input type="file" id="importFile" accept="application/json" title="Select a JSON file to import quotes" />
   <button id="importQuotes">Import Quotes</button>
