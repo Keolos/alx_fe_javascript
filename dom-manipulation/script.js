@@ -17,6 +17,7 @@ function showRandomQuote() {
   if (quotes.length === 0) {
     quoteDisplay.innerHTML = "<p>No quotes available. Please add one!</p>";
     return;
+  }
 
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const randomQuote = quotes[randomIndex];
@@ -297,7 +298,7 @@ async function loadServerQuotes() {
 document.getElementById("loadServerQuotes").addEventListener("click", loadServerQuotes);
 
 // Sync local quotes with server periodically
-async function syncWithServer() {
+async function syncQuotes() {
   const serverQuotes = await fetchQuotesFromServer();
 
   if (serverQuotes.length > 0) {
@@ -306,17 +307,13 @@ async function syncWithServer() {
     saveQuotes();
 
     notifyUser("Quotes synced with server. Server data takes precedence.");
-  populateCategories();
-}
-
-    // Notify user about sync
-    notifyUser("Quotes synced with server. Server data takes precedence.");
     populateCategories();
   }
 }
 
 // Run sync every 30 seconds
-setInterval(syncWithServer, 30000);
+setInterval(syncQuotes, 30000);
+
 
 // Show notifications in the UI
 function notifyUser(message) {
@@ -348,3 +345,4 @@ async function fetchQuotesFromServer() {
     return [];
   }
 }
+
