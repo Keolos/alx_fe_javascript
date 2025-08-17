@@ -223,3 +223,85 @@ showRandomQuote();
 
 // Re-filter when dropdown changes
 document.getElementById("categoryFilter").addEventListener("change", filterQuotes);
+
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // mock API
+
+// Fetch quotes from server (simulation)
+async function fetchServerQuotes() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const data = await response.json();
+
+    // Simulate server returning quotes (just use first few posts as fake quotes)
+    const serverQuotes = data.slice(0, 5).map(post => ({
+      text: post.title,
+      category: "Server"
+    }));
+
+    return serverQuotes;
+  } catch (error) {
+    console.error("Error fetching from server:", error);
+    return [];
+  }
+}
+
+// Push new quotes to server (simulation)
+async function syncQuoteToServer(quote) {
+  try {
+    const response = await fetch(SERVER_URL, {
+      method: "POST",
+      body: JSON.stringify(quote),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    });
+    const result = await response.json();
+    console.log("Quote synced to server:", result);
+  } catch (error) {
+    console.error("Error syncing quote to server:", error);
+  }
+}
+
+// Function to load quotes from server and merge with localStorage
+async function loadServerQuotes() {
+  const serverQuotes = await fetchServerQuotes();
+  if (serverQuotes.length > 0) {
+    quotes = [...quotes, ...serverQuotes];
+    saveQuotes();
+    populateCategories(); // refresh categories
+    showRandomQuote(); // show a quote from the updated list
+    alert("Server quotes loaded successfully!");
+  } else {
+    alert("No quotes available from server.");
+  }
+}
+document.getElementById("loadServerQuotes").addEventListener("click", loadServerQuotes);
+
+// Sync local quotes with server periodically
+async function syncWithServer() {
+  const serverQuotes = await fetchServerQuotes();
+
+  if (serverQuotes.length > 0) {
+    // Conflict resolution: server data takes precedence
+    quotes = [...serverQuotes, ...quotes];
+    saveQuotes();
+
+    // Notify user about sync
+    notifyUser("Quotes synced with server. Server data takes precedence.");
+    populateCategories();
+  }
+}
+
+// Run sync every 30 seconds
+setInterval(syncWithServer, 30000);
+
+// Show notifications in the UI
+function notifyUser(message) {
+  const notification = document.getElementById("notification");
+  notification.textContent = message;
+
+  // Auto-clear after 5 seconds
+  setTimeout(() => {
+    notification.textContent = "";
+  }, 5000);
+}
