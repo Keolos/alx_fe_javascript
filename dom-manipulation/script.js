@@ -271,7 +271,7 @@ async function syncQuoteToServer(quote) {
       method: "POST",
       body: JSON.stringify(quote),
       headers: {
-        "Content-type": "application/json; charset=UTF-8"
+        "Content-Type": "application/json; charset=UTF-8"
       }
     });
     const result = await response.json();
