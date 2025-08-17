@@ -39,8 +39,77 @@
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
     <button id="addQuoteBtn">Add Quote</button>
-    <button id="exportQuotes">Export Quotes</button>
   </div>
+  <div style="margin-top:20px;">
+  <button id="exportQuotes">Export Quotes</button>
+</div>
+
+<div style="margin-top:20px;">
+  <input type="file" id="importFile" accept="application/json" />
+  <button id="importQuotes">Import Quotes</button>
+</div>
+    <script>
+        const quotes = [
+        { text: "The only limit to our realization of tomorrow is our doubts of today.", category: "Motivation" },
+        { text: "Life is 10% what happens to us and 90% how we react to it.", category: "Life" },
+        { text: "The purpose of our lives is to be happy.", category: "Happiness" }
+        ];
+    
+        function displayQuote(quote) {
+        const quoteDisplay = document.getElementById('quoteDisplay');
+        quoteDisplay.innerHTML = `<div class="quote">${quote.text}</div><div class="category">${quote.category}</div>`;
+        }
+    
+        function getRandomQuote() {
+        return quotes[Math.floor(Math.random() * quotes.length)];
+        }
+    
+        document.getElementById('newQuote').addEventListener('click', () => {
+        displayQuote(getRandomQuote());
+        });
+    
+        document.getElementById('addQuoteBtn').addEventListener('click', () => {
+        const newQuoteText = document.getElementById('newQuoteText').value;
+        const newQuoteCategory = document.getElementById('newQuoteCategory').value;
+        if (newQuoteText && newQuoteCategory) {
+            quotes.push({ text: newQuoteText, category: newQuoteCategory });
+            alert("New quote added!");
+            document.getElementById('newQuoteText').value = '';
+            document.getElementById('newQuoteCategory').value = '';
+        } else {
+            alert("Please fill in both fields.");
+        }
+        });
+    
+        document.getElementById('exportQuotes').addEventListener('click', () => {
+        const dataStr = JSON.stringify(quotes, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'quotes.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        });
+    
+        document.getElementById('importQuotes').addEventListener('click', () => {
+        const fileInput = document.getElementById('importFile');
+        if (fileInput.files.length > 0) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(event) {
+            try {
+                const importedQuotes = JSON.parse(event.target.result);
+                if (Array.isArray(importedQuotes)) {   
+                    quotes.push(...importedQuotes);
+                    alert("Quotes imported successfully!");
+                } else {
+                    alert("Invalid file format. Please upload a valid JSON file.");
+                }
+            } catch (error) {
+                alert("Error reading file: " + error.message);
+            }
+            };
+
   
   <script src="script.js"></script>
 </body>
