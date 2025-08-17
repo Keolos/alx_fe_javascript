@@ -73,3 +73,24 @@ addQuoteBtn.addEventListener("click", addQuote);
 
 // Show a quote on initial load
 showRandomQuote();
+
+// Function to export quotes as a JSON file
+function exportQuotes() {
+  const dataStr = JSON.stringify(quotes, null, 2); // Pretty print
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  // Create a temporary download link
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "quotes.json";
+  document.body.appendChild(a);
+  a.click();
+
+  // Clean up
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// Add event listener
+document.getElementById("exportQuotes").addEventListener("click", exportQuotes);
