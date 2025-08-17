@@ -306,7 +306,7 @@ async function syncQuotes() {
     quotes = [...serverQuotes, ...quotes];
     saveQuotes();
 
-    notifyUser("Quotes synced with server. Server data takes precedence.");
+    notifyUser("Quotes synced with server!");
     populateCategories();
   }
 }
