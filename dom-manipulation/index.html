@@ -25,6 +25,9 @@
       font-size: 14px;
       color: #555;
     }
+    .margin-top-20 {
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -35,17 +38,15 @@
   <button id="newQuote">Show New Quote</button>
 
   <!-- Form to add new quotes -->
-  <div style="margin-top:20px;">
+  <div class="margin-top-20">
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button id="addQuoteBtn">Add Quote</button>
-  </div>
-  <div style="margin-top:20px;">
+  <div class="margin-top-20">
   <button id="exportQuotes">Export Quotes</button>
 </div>
 
-<div style="margin-top:20px;">
-  <input type="file" id="importFile" accept="application/json" />
+<div class="margin-top-20">
+  <label for="importFile">Import Quotes (JSON):</label>
+  <input type="file" id="importFile" accept="application/json" title="Select a JSON file to import quotes" />
   <button id="importQuotes">Import Quotes</button>
 </div>
     <script>
@@ -109,8 +110,13 @@
                 alert("Error reading file: " + error.message);
             }
             };
+            fileReader.readAsText(fileInput.files[0]);
+        } else {
+            alert("Please select a file to import.");
+        }
+        });
 
-  
+</script>
   <script src="script.js"></script>
 </body>
 </html>

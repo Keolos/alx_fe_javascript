@@ -94,3 +94,42 @@ function exportQuotes() {
 
 // Add event listener
 document.getElementById("exportQuotes").addEventListener("click", exportQuotes);
+
+// Function to import quotes from a JSON file
+function importQuotes(event) {
+  const file = event.target.files[0];
+  if (!file) {
+    alert("Please select a file to import.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importedQuotes = JSON.parse(e.target.result);
+      if (Array.isArray(importedQuotes)) {
+        quotes = importedQuotes;
+        saveQuotes();
+        showRandomQuote();
+        alert("Quotes imported successfully!");
+      } else {
+        alert("Invalid file format. Please upload a valid JSON file.");
+      }
+    } catch (error) {
+      alert("Error reading file: " + error.message);
+    }
+  };
+  reader.readAsText(file);
+}
+document.getElementById("importQuotes").addEventListener("change", importQuotes);
+
+// Function to clear all quotes
+function clearQuotes() {
+  if (confirm("Are you sure you want to clear all quotes? This action cannot be undone.")) {
+    quotes = [];
+    saveQuotes();
+    showRandomQuote();
+    alert("All quotes cleared successfully!");
+  }
+}
+document.getElementById("clearQuotes").addEventListener("click", clearQuotes);
