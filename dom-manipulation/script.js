@@ -1,5 +1,5 @@
-// Initial quotes array with categories
-let quotes = [
+// Load quotes from localStorage if available, otherwise use defaults
+let quotes = JSON.parse(localStorage.getItem("quotes")) || [
   { text: "The best way to get started is to quit talking and begin doing.", category: "Motivation" },
   { text: "Success is not the key to happiness. Happiness is the key to success.", category: "Inspiration" },
   { text: "In the middle of every difficulty lies opportunity.", category: "Wisdom" }
@@ -39,6 +39,11 @@ function showRandomQuote() {
   quoteDisplay.appendChild(categoryText);
 }
 
+// Function to save quotes to localStorage
+function saveQuotes() {
+  localStorage.setItem("quotes", JSON.stringify(quotes));
+}
+
 // Function to add a new quote
 function addQuote() {
   const text = newQuoteText.value.trim();
@@ -51,6 +56,9 @@ function addQuote() {
 
   // Add new quote object to array
   quotes.push({ text, category });
+
+  // Save to localStorage
+  saveQuotes();
 
   // Clear input fields
   newQuoteText.value = "";
