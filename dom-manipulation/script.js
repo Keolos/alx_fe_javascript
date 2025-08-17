@@ -17,7 +17,6 @@ function showRandomQuote() {
   if (quotes.length === 0) {
     quoteDisplay.innerHTML = "<p>No quotes available. Please add one!</p>";
     return;
-  }
 
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const randomQuote = quotes[randomIndex];
@@ -227,11 +226,31 @@ document.getElementById("categoryFilter").addEventListener("change", filterQuote
 const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // mock API
 
 // Fetch quotes from server (simulation)
-async function fetchServerQuotes() {
+async function fetchQuotesFromServer() {
   try {
     const response = await fetch(SERVER_URL);
     const data = await response.json();
 
+    // Simulate server returning quotes (map posts into fake quotes)
+    const serverQuotes = data.slice(0, 5).map(post => ({
+      text: post.title,
+      category: "Server"
+    }));
+
+    return serverQuotes;
+  } catch (error) {
+    console.error("Error fetching from server:", error);
+    return [];
+  }
+}
+// Fetch quotes from server (simulation)
+async function fetchServerQuotes() {
+    try {   
+        const response = await fetch(SERVER_URL);
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
     // Simulate server returning quotes (just use first few posts as fake quotes)
     const serverQuotes = data.slice(0, 5).map(post => ({
       text: post.title,
@@ -279,12 +298,16 @@ document.getElementById("loadServerQuotes").addEventListener("click", loadServer
 
 // Sync local quotes with server periodically
 async function syncWithServer() {
-  const serverQuotes = await fetchServerQuotes();
+  const serverQuotes = await fetchQuotesFromServer();
 
   if (serverQuotes.length > 0) {
     // Conflict resolution: server data takes precedence
     quotes = [...serverQuotes, ...quotes];
     saveQuotes();
+
+    notifyUser("Quotes synced with server. Server data takes precedence.");
+  populateCategories();
+}
 
     // Notify user about sync
     notifyUser("Quotes synced with server. Server data takes precedence.");
@@ -304,4 +327,24 @@ function notifyUser(message) {
   setTimeout(() => {
     notification.textContent = "";
   }, 5000);
+}
+
+
+// Fetch quotes from server (simulation)
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const data = await response.json();
+
+    // Simulate server returning quotes (map posts into fake quotes)
+    const serverQuotes = data.slice(0, 5).map(post => ({
+      text: post.title,
+      category: "Server"
+    }));
+
+    return serverQuotes;
+  } catch (error) {
+    console.error("Error fetching from server:", error);
+    return [];
+  }
 }
